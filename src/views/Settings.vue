@@ -5,6 +5,9 @@ import { ref } from 'vue';
 const showFullText = ref(false);
 </script>
 <template>
+    <div class="title-container">
+        <div class="title">设置</div>
+    </div>
     <CellGroup inset style="margin-bottom: 10px;">
         <Cell title="首页视图展示全文信息" label="在首页直接展示便签所有的内容，不隐藏信息">
             <template #right-icon>
@@ -22,3 +25,17 @@ const showFullText = ref(false);
         <Cell title="关于"></Cell>
     </CellGroup>
 </template>
+<style>
+.title-container {
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    margin: 15px;
+}
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+</style>

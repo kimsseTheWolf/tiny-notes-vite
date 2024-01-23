@@ -5,6 +5,10 @@ import { ref } from 'vue';
 const addBubbleOffset = ref({ x: 350, y: 600 });
 </script>
 <template>
+    <div class="title-container">
+        <div class="title">早上好！</div>
+        <div class="description">今天想要记录什么？</div>
+    </div>
     This is the Home
     <FloatingBubble icon="add" axis="y" magnetic="x"></FloatingBubble>
 </template>
@@ -20,5 +24,11 @@ body {
     font-size: larger;
     font-weight: bold;
     margin-bottom: 5px;
+}
+.title-container {
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    margin: 15px;
 }
 </style>
