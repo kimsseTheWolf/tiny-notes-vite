@@ -1,7 +1,36 @@
 <script setup>
-import {CellGroup, Cell, Switch} from "vant"
+import {CellGroup, Cell, Switch, Popup, Field, Button, showSuccessToast} from "vant"
 import { ref } from 'vue';
+import {getConfig, setConfig, loadConfig} from "../js/ConfigManager.js"
 
+const settingsPreferences = ref({
+    username: "",
+    showFullText: false,
+})
+
+const windowController = ref({
+    showUsernamePopup: false,
+})
+
+function getSettingsPreferences() {
+    loadConfig()
+    settingsPreferences.value.username = getConfig("username")
+    settingsPreferences.value.showFullText = getConfig("showNotesFullContent")
+    console.log(settingsPreferences.value.username)
+    console.log(settingsPreferences.value.showFullText)
+}
+
+function triggerShowFullContent() {
+    setConfig("showNotesFullContent", settingsPreferences.value.showFullText)
+}
+
+function setUsernameAndHide() {
+    setConfig("username", settingsPreferences.value.username)
+    windowController.value.showUsernamePopup = false
+    showSuccessToast("设置成功")
+}
+
+getSettingsPreferences()
 const showFullText = ref(false);
 </script>
 <template>
@@ -11,12 +40,12 @@ const showFullText = ref(false);
     <CellGroup inset style="margin-bottom: 10px;">
         <Cell title="首页视图展示全文信息" label="在首页直接展示便签所有的内容，不隐藏信息">
             <template #right-icon>
-                <Switch v-model="showFullText"></Switch>
+                <Switch v-model="settingsPreferences.showFullText" @change="triggerShowFullContent()"></Switch>
             </template>
         </Cell>
     </CellGroup>
     <CellGroup inset style="margin-bottom: 10px;">
-        <Cell title="设置称呼" value="默认" label="您希望我们如何称呼您？"></Cell>
+        <Cell title="设置称呼" :value="settingsPreferences.username" label="您希望我们如何称呼您？" @click="windowController.showUsernamePopup = true"></Cell>
         <Cell title="导出所有数据" label="将所有的便签信息下载并保存在本地"></Cell>
         <Cell title="设置颜色与标签"></Cell>
     </CellGroup>
@@ -24,6 +53,18 @@ const showFullText = ref(false);
         <Cell title="清除Cookies" label="若遇到问题请根据指示使用此选项"></Cell>
         <Cell title="关于"></Cell>
     </CellGroup>
+    <Popup v-model:show="windowController.showUsernamePopup" round position="bottom" style="height: 60%; background-color: rgb(250,250,250)">
+        <div class="popupView">
+            <div class="title">设置称呼</div>
+            <div style="margin-bottom: 10px;">您希望我们如何称呼您？</div>
+        </div>
+        <CellGroup inset>
+            <Field label="称呼" v-model="settingsPreferences.username" placeholder="请输入您的称呼"></Field>
+        </CellGroup>
+        <div class="popupView">
+            <Button type="primary" style="margin-top: 10px;" @click="setUsernameAndHide()">确定</Button>
+        </div>
+    </Popup>
 </template>
 <style>
 .title-container {
@@ -37,5 +78,11 @@ const showFullText = ref(false);
     font-weight: bold;
     margin-bottom: 5px;
     margin-top: 15px;
+}
+.popupView {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 10px;
 }
 </style>
