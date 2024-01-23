@@ -1,6 +1,7 @@
 
 const keys = {
-    config: "ezNote:config"
+    config: "ezNote:config",
+    moods: "ezNote:moods",
 }
 
 function setStorage(key, value) {

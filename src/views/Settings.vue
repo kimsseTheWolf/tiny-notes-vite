@@ -2,6 +2,8 @@
 import {CellGroup, Cell, Switch, Popup, Field, Button, showSuccessToast} from "vant"
 import { ref } from 'vue';
 import {getConfig, setConfig, loadConfig} from "../js/ConfigManager.js"
+import {getAllMoodTag} from "../js/MoodTagManager.js"
+import ColorCircle from "../components/ColorCircle.vue";
 
 const settingsPreferences = ref({
     username: "",
@@ -10,7 +12,10 @@ const settingsPreferences = ref({
 
 const windowController = ref({
     showUsernamePopup: false,
+    showColorPopup: false,
 })
+
+const moodTagList = ref(getAllMoodTag())
 
 function getSettingsPreferences() {
     loadConfig()
@@ -46,8 +51,8 @@ const showFullText = ref(false);
     </CellGroup>
     <CellGroup inset style="margin-bottom: 10px;">
         <Cell title="设置称呼" :value="settingsPreferences.username" label="您希望我们如何称呼您？" @click="windowController.showUsernamePopup = true"></Cell>
+        <Cell title="设置颜色与标签" @click="windowController.showColorPopup = true"></Cell>
         <Cell title="导出所有数据" label="将所有的便签信息下载并保存在本地"></Cell>
-        <Cell title="设置颜色与标签"></Cell>
     </CellGroup>
     <CellGroup inset>
         <Cell title="清除Cookies" label="若遇到问题请根据指示使用此选项"></Cell>
@@ -64,6 +69,19 @@ const showFullText = ref(false);
         <div class="popupView">
             <Button type="primary" style="margin-top: 10px;" @click="setUsernameAndHide()">确定</Button>
         </div>
+    </Popup>
+    <Popup v-model:show="windowController.showColorPopup" round position="bottom" style="height: 80%; background-color: rgb(250,250,250)">
+        <div class="popupView">
+            <div class="title">管理颜色与标签</div>
+            <div style="margin-bottom: 10px;">添加，删除，管理所有颜色标签</div>
+        </div>
+        <CellGroup inset>
+            <Cell :title="i.name" v-for="i in moodTagList">
+                <template #right-icon>
+                    <ColorCircle :color="i.color"></ColorCircle>
+                </template>
+            </Cell>
+        </CellGroup>
     </Popup>
 </template>
 <style>
